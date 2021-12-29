@@ -18,7 +18,6 @@ class TabsPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => new _NavegacionModel(),  
       child: Scaffold(
-        //body: _Paginas(),
         body: StreamBuilder<Usuario?>(
           stream: authService.user,
           builder: ( _ , AsyncSnapshot<Usuario?> snapshot){

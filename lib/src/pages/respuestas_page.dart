@@ -3,6 +3,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:precavidos_simulador/src/ads/banner_ad.dart';
 import 'package:precavidos_simulador/src/models/comentario_model.dart';
 import 'package:precavidos_simulador/src/models/pregunta.dart';
+import 'package:precavidos_simulador/src/pages/pregunta_page.dart';
+import 'package:precavidos_simulador/src/pages/responder_page.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:precavidos_simulador/src/widgets/appBarPrecavidos.dart';
 
@@ -58,8 +60,16 @@ class __ResultadoState extends State<_Resultado> {
 
         AppBarPrecavidos(titulo: "Respuestas", color: Theme.of(context).primaryColor),
 
+        SizedBox(height: 30),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text("Escoge la pregunta", textAlign: TextAlign.start, style: TextStyle(fontWeight: FontWeight.bold)),
+          )
+        ),
         Container(
-          margin: EdgeInsets.only(top: 30),
+          margin: EdgeInsets.only(top: 5),
           width: double.infinity,
           height: 30,
           child: ListView.builder(
@@ -140,6 +150,36 @@ class __ResultadoState extends State<_Resultado> {
             ),
           ),
         ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => PreguntaPage(preguntaId: preguntaActual.id)
+                  )
+                );
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width*0.8,
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+                margin: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: MyColors.primaryColor,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Text("¿COMO RESOLVER?", 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16, )
+                )
+              ),
+            )
+          ],
+        ),
+        
         BannerAdGoogle()
       ],
     );

@@ -3,7 +3,6 @@ import 'package:precavidos_simulador/src/utils/my_colors.dart';
 
 
 showAlertDialog(BuildContext context) {
-
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Row(

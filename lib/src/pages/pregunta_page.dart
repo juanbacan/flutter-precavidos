@@ -21,6 +21,45 @@ final Map<String, String> materias = {
   "abstracto": "Razonamiento Abstracto"
 };
 
+showAlertDialog(BuildContext context, String texto) {
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Row(
+      children: [
+        Icon(Icons.error_outline, size: 30, color: Theme.of(context).colorScheme.primary),
+        SizedBox(width: 10),
+        Text("Debes Iniciar Sesión")
+      ],
+    ),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(texto),
+        SizedBox(height: 20), 
+        Text("*Para iniciar sesión, ve al inicio en la sección Usuario.", style: TextStyle(fontSize: 14)),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [       
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context, false);
+            }, child: Text("Entendido"))
+          ],
+        ) 
+      ]
+    )
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
 class PreguntaPage extends StatelessWidget {
 
   final String preguntaId;
@@ -105,18 +144,10 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                     Divider(thickness: 10 ),
                     
                     _preguntasService.comentarios?.length == 0 ?
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 50),
-                            Text("Aún nadie a agregado una respuesta.", style: TextStyle(fontWeight: FontWeight.bold)),
-                            SizedBox(height: 10),
-                            Text("¡Sé el primero en responder!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                          ],
-                        )
-                      ) :             
+
+                      _SinComentarios() :   
+
+                      // ******************************* Comentarios ***********************************          
                       
                       ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
@@ -132,48 +163,8 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
 
                           return Column(
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 21),
-                                margin: EdgeInsets.only(top: 15, bottom: 5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Respuesta", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                                    Row(
-                                      children: [
-                                        (numLikes == 0) ?
-                                          Icon(Icons.favorite_border, size: 19):
-                                          Icon(Icons.favorite, size: 19, color: Color.fromRGBO(255, 121, 104, 1)),        
-                                        SizedBox(width: 3),
-                                        Text("$numLikes", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                        
-                                        (usuario != null && usuario.id == comentario.uid)
-                                          ? PopupMenuButton(
-                                            onSelected: (result){
-                                              
-                                              Navigator.push(
-                                                context, 
-                                                MaterialPageRoute(
-                                                  builder: (context) => ResponderPage(
-                                                    preguntaId: this.pregunta!.id, 
-                                                    preguntasService: _preguntasService,
-                                                    actualizar: true,
-                                                    comentario: comentario.comentario,
-                                                    idComentario: comentario.id
-                                                  )
-                                                )
-                                              );
-                                            },
-                                            itemBuilder: (BuildContext context) => [
-                                              const PopupMenuItem(child: Text("Editar Solución"), value: "Editar",)
-                                            ],
-                                          )
-                                          : SizedBox.shrink()
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              ),
+
+                              _HeaderComentario(numLikes: numLikes, usuario: usuario, comentario: comentario, pregunta: pregunta, preguntasService: _preguntasService),
                               
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -182,30 +173,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
 
                               SizedBox(height: 10),
 
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        (comentario.photoUrl != null)
-                                          ? CircleAvatar(
-                                            radius: 18,
-                                            backgroundImage: NetworkImage(comentario.photoUrl!),
-                                          )
-                                          : CircleAvatar(
-                                            radius: 18,
-                                            child: Text("${comentario.displayName[0]}", style: TextStyle(fontSize: 25),),
-                                          ),
-                                        SizedBox(width: 10),
-                                        Text(comentario.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                    SizedBox(height: 6),
-                                    Divider(thickness: 2 ),
-                                  ],
-                                ),
-                              ),
+                              _UsuarioComentario(comentario: comentario),
                               
                               SizedBox(height: 10),
 
@@ -215,12 +183,16 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                   padding: EdgeInsets.only(right: 22),
                                   child: InkWell(
                                     onTap: () async {
-                                      if(usuario == null || likes!.contains(usuario.id)) return;
+                                      if(usuario == null){
+                                        showAlertDialog(context, "Para agregadecer la solución, primero debes iniciar sesión.");
+                                        return;
+                                      }
+
+                                      if(likes!.contains(usuario.id)) return;
                                       print("Agregando un nuevo like al comentario");
 
+                                      // Ya se está agregando un comentario
                                       if(agregandoLike) return;
-
-                                      // TODO Mosrar modal si no hay usuario
 
                                       // Agrega un nuevo like al comentario
                                       setState(() {
@@ -231,7 +203,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                       
                                       try {
                                         final String idToken = await _authService.getTokenUser();
-                                        final resp = await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
+                                        await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
                                           body: json.encode(
                                             {
                                               "idComentario": comentario.id,
@@ -287,10 +259,132 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
             )
           ),
 
-          _AgregarSolucion(preguntaId: widget.preguntaId),
+          _AgregarSolucion(preguntaId: widget.preguntaId, usuario: usuario),
         ],
       )
     ;
+  }
+}
+
+class _SinComentarios extends StatelessWidget {
+  const _SinComentarios({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 50),
+          Text("Aún nadie a agregado una respuesta.", style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("¡Sé el primero en responder!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        ],
+      )
+    );
+  }
+}
+
+class _UsuarioComentario extends StatelessWidget {
+  const _UsuarioComentario({
+    Key? key,
+    required this.comentario,
+  }) : super(key: key);
+
+  final Comentario comentario;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              (comentario.photoUrl != null)
+                ? CircleAvatar(
+                  radius: 18,
+                  backgroundImage: NetworkImage(comentario.photoUrl!),
+                )
+                : CircleAvatar(
+                  radius: 18,
+                  child: Text("${comentario.displayName[0]}", style: TextStyle(fontSize: 25),),
+                ),
+              SizedBox(width: 10),
+              Text(comentario.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          SizedBox(height: 6),
+          Divider(thickness: 2 ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderComentario extends StatelessWidget {
+  const _HeaderComentario({
+    Key? key,
+    required this.numLikes,
+    required this.usuario,
+    required this.comentario,
+    required this.pregunta,
+    required PreguntasService preguntasService,
+  }) : _preguntasService = preguntasService, super(key: key);
+
+  final int numLikes;
+  final Usuario? usuario;
+  final Comentario comentario;
+  final Pregunta? pregunta;
+  final PreguntasService _preguntasService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 21),
+      margin: EdgeInsets.only(top: 15, bottom: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Respuesta", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+          Row(
+            children: [
+              (numLikes == 0) ?
+                Icon(Icons.favorite_border, size: 19):
+                Icon(Icons.favorite, size: 19, color: Color.fromRGBO(255, 121, 104, 1)),        
+              SizedBox(width: 3),
+              Text("$numLikes", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              
+              (usuario != null && usuario?.id == comentario.uid)
+                ? PopupMenuButton(
+                  onSelected: (result){
+                    
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => ResponderPage(
+                          preguntaId: this.pregunta!.id, 
+                          preguntasService: _preguntasService,
+                          actualizar: true,
+                          comentario: comentario.comentario,
+                          idComentario: comentario.id
+                        )
+                      )
+                    );
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    const PopupMenuItem(child: Text("Editar Solución"), value: "Editar",)
+                  ],
+                )
+                : SizedBox.shrink()
+            ],
+          ),
+        ],
+      )
+    );
   }
 }
 
@@ -298,9 +392,11 @@ class _AgregarSolucion extends StatelessWidget {
   
   const _AgregarSolucion({
     required this.preguntaId,
+    this.usuario,
   });
 
   final String preguntaId;
+  final Usuario? usuario;
 
   @override
   Widget build(BuildContext context) {
@@ -314,9 +410,10 @@ class _AgregarSolucion extends StatelessWidget {
         children: [
           InkWell(
             onTap: (){
-
-              // TODO Mostrar Modal si no hay usuario
-
+              if(usuario == null){
+                showAlertDialog(context, "Para agregar una solución a la pregunta, primero debes iniciar sesión.");
+                return;
+              }
               Navigator.push(
                 context, 
                 MaterialPageRoute(
@@ -376,7 +473,7 @@ class _HeaderPregunta extends StatelessWidget {
           IconButton(
             color: Color.fromRGBO(85, 85, 85, 1),
             onPressed: (){
-              Share.share('Héchale un vistazo a esta pregunta \n https://precavidos.com/pregunta/${pregunta?.id}');
+              Share.share('Examen Transformar - Héchale un vistazo a esta pregunta de Precavidos \n https://precavidos.com/pregunta/${pregunta?.id}');
             }, 
             icon: Icon(Icons.share)
           )

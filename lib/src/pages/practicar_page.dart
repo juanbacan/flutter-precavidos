@@ -285,13 +285,6 @@ class __PracticarState extends State<_Practicar> {
             InkWell(
               onTap: (){
 
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context) => PreguntaPage(preguntaId: idPregunta)
-                  )
-                );
-                /*
                 // Publicidad *********************************
                 Random randomNumber = Random();
                 int r = 1 + randomNumber.nextInt(6);
@@ -303,6 +296,13 @@ class __PracticarState extends State<_Practicar> {
                 }
                 // ********************************************
 
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => PreguntaPage(preguntaId: idPregunta)
+                  )
+                );
+                /*
                 if(correcta) return;
                 userCheck = {
                   "respuesta1": false,
@@ -319,8 +319,8 @@ class __PracticarState extends State<_Practicar> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Ver Respuesta", style: TextStyle(color: Colors.white)),
-                  Icon(Icons.remove_red_eye, color: Colors.white),
+                  Icon(Icons.help_outlined, color: Colors.white, size: 23,),
+                  Text("¿Cómo resolver?", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
