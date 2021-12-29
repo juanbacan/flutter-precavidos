@@ -1,0 +1,109 @@
+{
+  "project_info": {
+    "project_number": "1086510543703",
+    "project_id": "pre-online",
+    "storage_bucket": "pre-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086510543703:android:dafa464e817eada76b8412",
+        "android_client_info": {
+          "package_name": "com.example.precavidos_simulador"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086510543703-vl92ckb126j0os6711c95h57gohuo2p5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.precavidos_simulador",
+            "certificate_hash": "19bc078b1bd2ec6ff41a8befba0dc1332f0d7729"
+          }
+        },
+        {
+          "client_id": "1086510543703-bvmfa9vg3eu40d1lrtldaeqde8rqcb1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4lVvefGq5VZudqDe-cTvWS7wr3mzMtPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086510543703-bvmfa9vg3eu40d1lrtldaeqde8rqcb1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086510543703:android:b9ecddf87d69beda6b8412",
+        "android_client_info": {
+          "package_name": "com.preonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086510543703-mifq53v4mfkf8uftbr9u5agfnaufirgk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.preonline",
+            "certificate_hash": "8ee2d3e21f3888077c65023f83a62236729bfd8a"
+          }
+        },
+        {
+          "client_id": "1086510543703-q4328chqbnohsgnuktqriufp1anpii0c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.preonline",
+            "certificate_hash": "19bc078b1bd2ec6ff41a8befba0dc1332f0d7729"
+          }
+        },
+        {
+          "client_id": "1086510543703-qlt98uvjqal4srpvoqqvf5fo1gkqudom.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.preonline",
+            "certificate_hash": "d95b89ab4de2bf78d0b80d6be0bed507cbbd61d5"
+          }
+        },
+        {
+          "client_id": "1086510543703-vk5fu5b00j8u040ec6pbbn1bd5st7kij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.preonline",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1086510543703-bvmfa9vg3eu40d1lrtldaeqde8rqcb1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4lVvefGq5VZudqDe-cTvWS7wr3mzMtPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086510543703-bvmfa9vg3eu40d1lrtldaeqde8rqcb1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-8752034118555127~5984362102"
+    }
+  ],
+  "configuration_version": "1"
+}
