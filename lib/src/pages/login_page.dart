@@ -19,62 +19,60 @@ class LoginPage extends StatelessWidget {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Logo(titulo: "Precavidos"),
-                  
-                  SizedBox(height: 30),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Logo(titulo: "Precavidos"),
+                
+                SizedBox(height: 30),
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    child: InkWell(
-                      onTap: () async {
-                        await authService.googleLogin();  
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.4),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(image: AssetImage('assets/images/google_icon.png'), width: 45,),
-                            SizedBox(width: 10),
-                            Text("Ingresar con Google", style: TextStyle(fontSize: 17))
-                          ],
-                        ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  child: InkWell(
+                    onTap: () async {
+                      await authService.googleLogin();  
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.4),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(image: AssetImage('assets/images/google_icon.png'), width: 45,),
+                          SizedBox(width: 10),
+                          Text("Ingresar con Google", style: TextStyle(fontSize: 17))
+                        ],
                       ),
                     ),
                   ),
+                ),
           
-                  SizedBox(height: 30),
+                SizedBox(height: 30),
 
-                  Text("o puedes ingresar con"),
+                Text("o puedes ingresar con"),
 
-                  SizedBox(height: 30),
+                SizedBox(height: 30),
           
-                  _Form(),
-                  SizedBox(height: 30),
-                  Labels(ruta: "register", mensaje1: "¿No tienes cuenta?", mensaje2: "Crea una ahora"),
-                  SizedBox(height: 30),
-                  Text("Terminos y condiciones de uso", style: TextStyle(fontWeight: FontWeight.w200),),
-                  SizedBox( height: 1 ),
-                ]
-              ),
+                _Form(),
+                SizedBox(height: 30),
+                Labels(ruta: "register", mensaje1: "¿No tienes cuenta?", mensaje2: "Crea una ahora"),
+                SizedBox(height: 30),
+                Text("Terminos y condiciones de uso", style: TextStyle(fontWeight: FontWeight.w200),),
+                SizedBox( height: 1 ),
+              ]
             ),
           ),
         ),

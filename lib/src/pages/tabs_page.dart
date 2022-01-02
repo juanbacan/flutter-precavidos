@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precavidos_simulador/src/models/usuario.dart';
+//import 'package:precavidos_simulador/src/pages/contestar_page.dart';
 import 'package:precavidos_simulador/src/pages/login_page.dart';
 import 'package:precavidos_simulador/src/pages/usuario_page.dart';
 import 'package:precavidos_simulador/src/services/auth_service.dart';
@@ -47,6 +48,8 @@ class _Navegacion extends StatelessWidget {
       onTap: (i) => navegacionModel.paginaActual = i,
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.app_registration), label: "Practicar"),
+        //BottomNavigationBarItem(icon: Icon(Icons.question_answer_sharp), label: "Contestar"),
+        //BottomNavigationBarItem(icon: Icon(Icons.insert_comment), label: "Contestar"),
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Usuario"),
       ]
     );
@@ -67,6 +70,7 @@ class _Paginas2 extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       children: [
         HomePage(),
+        //ContestarPage(),
         LoginPage(),
       ]
     );
@@ -86,6 +90,7 @@ class _Paginas extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       children: [
         HomePage(),
+        //ContestarPage(),
         UsuarioPage(),
         /*StreamBuilder<Usuario?>(
           stream: authService.user,

@@ -329,7 +329,7 @@ class __PracticarState extends State<_Practicar> {
               onTap: (){
                 // Publicidad *********************************
                 Random randomNumber = Random();
-                int r = 1 + randomNumber.nextInt(4);
+                int r = 1 + randomNumber.nextInt(6);
 
                 print(r);
 

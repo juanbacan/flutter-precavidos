@@ -21,23 +21,30 @@ final Map<String, String> materias = {
   "abstracto": "Razonamiento Abstracto"
 };
 
-showAlertDialog(BuildContext context, String texto) {
+showAlertDialog(BuildContext context, String texto, bool isComentario) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Row(
       children: [
         Icon(Icons.error_outline, size: 30, color: Theme.of(context).colorScheme.primary),
         SizedBox(width: 10),
-        Text("Debes Iniciar Sesión")
+
+        (isComentario == false) 
+        ? Text("Debes Iniciar Sesión",  maxLines: 2, overflow: TextOverflow.ellipsis)
+        : Expanded(child: Text("Ya has agregado una solución", maxLines: 2, overflow: TextOverflow.ellipsis))
       ],
     ),
     content: Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min, 
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(texto),
         SizedBox(height: 20), 
-        Text("*Para iniciar sesión, ve al inicio en la sección Usuario.", style: TextStyle(fontSize: 14)),
+
+        (isComentario == false) 
+        ?Text("*Para iniciar sesión, ve al inicio en la sección Usuario.", style: TextStyle(fontSize: 14))
+        : SizedBox.shrink(),
+
         SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +103,6 @@ class PreguntaInfo extends StatefulWidget {
 class _PreguntaInfoState extends State<PreguntaInfo> {
 
   Pregunta? pregunta;
-  List<String>? likes;
   bool agregandoLike = false;
 
   @override
@@ -155,16 +161,12 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                         itemCount: _preguntasService.comentarios?.length,
                         itemBuilder: (BuildContext context, int index){
                           
-                          //print(_preguntasService.comentarios);
-                          //final Comentario comentario = pregunta!.comentarios![index]!;
                           final Comentario comentario = _preguntasService.comentarios![index]!;
-                          final int numLikes = comentario.likes.length;
-                          likes = comentario.likes;
 
                           return Column(
                             children: [
 
-                              _HeaderComentario(numLikes: numLikes, usuario: usuario, comentario: comentario, pregunta: pregunta, preguntasService: _preguntasService),
+                              _HeaderComentario(numLikes: comentario.likes.length, usuario: usuario, comentario: comentario, pregunta: pregunta, preguntasService: _preguntasService),
                               
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -184,30 +186,31 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                   child: InkWell(
                                     onTap: () async {
                                       if(usuario == null){
-                                        showAlertDialog(context, "Para agregadecer la solución, primero debes iniciar sesión.");
+                                        showAlertDialog(context, "Para agregadecer la solución, primero debes iniciar sesión.", false);
                                         return;
                                       }
 
-                                      if(likes!.contains(usuario.id)) return;
-                                      print("Agregando un nuevo like al comentario");
+                                      if(comentario.likes.contains(usuario.id)) return;
 
                                       // Ya se está agregando un comentario
                                       if(agregandoLike) return;
 
+                                      print("Confirmando agregar comentario");
+
                                       // Agrega un nuevo like al comentario
                                       setState(() {
                                         agregandoLike = true;
-                                        likes = comentario.likes;
-                                        likes!.add(usuario.id);
+                                        comentario.likes.add(usuario.id);
                                       });
                                       
                                       try {
+
                                         final String idToken = await _authService.getTokenUser();
-                                        await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
+                                        final resp = await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
                                           body: json.encode(
                                             {
                                               "idComentario": comentario.id,
-                                              "likes": likes
+                                              "likes": comentario.likes
                                             }
                                           ),
                                           headers: {
@@ -215,17 +218,22 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                             'x-token': idToken
                                           }
                                         ); 
+
                                         setState(() {
                                           agregandoLike = false;
                                         });   
                                       } catch (e) {
+                                        setState(() {
+                                          agregandoLike = false;
+                                        });
+                                        print("No se ha agregado el like");
                                         print(e);
                                       }
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: (usuario == null || !likes!.contains(usuario.id)) 
+                                        color: (usuario == null || !comentario.likes.contains(usuario.id)) 
                                           ? Color.fromRGBO(236, 236  , 236, 1) 
                                           : Color.fromRGBO(255, 228  , 225, 1),
                                         borderRadius: BorderRadius.circular(20)
@@ -234,19 +242,20 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          (usuario == null || !likes!.contains(usuario.id)) 
+                                          (usuario == null || !comentario.likes.contains(usuario.id)) 
                                             ? Icon(Icons.favorite_border, size: 19)
                                             : Icon(Icons.favorite, size: 19, color: Color.fromRGBO(255, 121, 104, 1)),
                                           SizedBox(width: 5),
                                           Text("GRACIAS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                                           SizedBox(width: 5),
-                                          Text("$numLikes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+                                          Text("${comentario.likes.length}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
                                         ],
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
+                              
                               SizedBox(height: 10),
                               Divider(thickness: 10 ),  
                             ],
@@ -259,7 +268,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
             )
           ),
 
-          _AgregarSolucion(preguntaId: widget.preguntaId, usuario: usuario),
+          _AgregarSolucion(preguntaId: widget.preguntaId, usuario: usuario, comentarios: pregunta!.comentarios!),
         ],
       )
     ;
@@ -279,7 +288,7 @@ class _SinComentarios extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 50),
-          Text("Aún nadie a agregado una respuesta.", style: TextStyle(fontWeight: FontWeight.bold)),
+          Text("Aún nadie ha agregado una respuesta.", style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           Text("¡Sé el primero en responder!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ],
@@ -392,10 +401,12 @@ class _AgregarSolucion extends StatelessWidget {
   
   const _AgregarSolucion({
     required this.preguntaId,
+    required this.comentarios,
     this.usuario,
   });
 
   final String preguntaId;
+  final List<Comentario?> comentarios;
   final Usuario? usuario;
 
   @override
@@ -410,10 +421,18 @@ class _AgregarSolucion extends StatelessWidget {
         children: [
           InkWell(
             onTap: (){
+
               if(usuario == null){
-                showAlertDialog(context, "Para agregar una solución a la pregunta, primero debes iniciar sesión.");
+                showAlertDialog(context, "Para agregar una solución a la pregunta, primero debes iniciar sesión.", false);
                 return;
               }
+
+              int contieneComentario = comentarios.indexWhere((element) => element!.uid == usuario!.id);
+              if(contieneComentario != -1){
+                showAlertDialog(context, "Si deseas modificar la solución, prueba a dar click en Editar", true);
+                return;
+              }
+
               Navigator.push(
                 context, 
                 MaterialPageRoute(
@@ -431,7 +450,7 @@ class _AgregarSolucion extends StatelessWidget {
               ),
               child: Text("AGREGAR SOLUCIÓN", 
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16, )
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)
               )
             ),
           )
@@ -473,7 +492,7 @@ class _HeaderPregunta extends StatelessWidget {
           IconButton(
             color: Color.fromRGBO(85, 85, 85, 1),
             onPressed: (){
-              Share.share('Examen Transformar - Héchale un vistazo a esta pregunta de Precavidos \n https://precavidos.com/pregunta/${pregunta?.id}');
+              Share.share('Examen Transformar - Échale un vistazo a esta pregunta de Precavidos \n https://precavidos.com/pregunta/${pregunta?.id}');
             }, 
             icon: Icon(Icons.share)
           )
