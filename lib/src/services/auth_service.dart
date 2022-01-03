@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:precavidos_simulador/src/global/environment.dart';
 import 'package:precavidos_simulador/src/models/infousuario_response.dart';
 import 'package:precavidos_simulador/src/models/usuario.dart';
@@ -29,7 +30,7 @@ class AuthService with ChangeNotifier {
     return _firebaseAuth.authStateChanges().map( _userFromFirebase );
   }
 
-  Future<Usuario?> signInWithEmailAndPassword(
+  Future<String> signInWithEmailAndPassword(
     String email,
     String password
   ) async{
@@ -38,14 +39,14 @@ class AuthService with ChangeNotifier {
         email: email, 
         password: password
       );
-      return _userFromFirebase(credential.user);
+      _userFromFirebase(credential.user);
+      return "Ok";
     } catch (e) {
-      print(e);
-      print("Ha ocurrido un error en la autenticación");
+      return e.toString();
     }  
   }
 
-  Future<Usuario?> createUserWithEmailAndPassword(  
+  Future<String> createUserWithEmailAndPassword(  
     String email,
     String password
   ) async{
@@ -54,10 +55,11 @@ class AuthService with ChangeNotifier {
         email: email, 
         password: password
       );
-      return _userFromFirebase(credential.user);
+      _userFromFirebase(credential.user);
+
+      return "Ok";
     } catch (e) {
-      print(e);
-      print("Ha ocurrido un error en la autenticación");
+      return e.toString();
     }    
   }
 
@@ -67,22 +69,31 @@ class AuthService with ChangeNotifier {
   Future <Usuario?>googleLogin() async {
 
     try {
-      final googleUser = await googleSingIn.signIn();
+      final GoogleSignInAccount? googleUser = await googleSingIn.signIn();
       if( googleUser == null ) return null;
 
-      final googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
 
       final credential = auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken
       );
 
       final credentialAuth = await _firebaseAuth.signInWithCredential(credential);
 
       return _userFromFirebase(credentialAuth.user);
     } catch (e) {
-      print("Ha ocurrido un error en la autenticación");
       return null;
+    }
+  }
+
+  Future <Usuario?>facebookLogin() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final auth.OAuthCredential facebookAuthCredential = auth.FacebookAuthProvider.credential(loginResult.accessToken!.token);
+      final credentialAuth = await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+      return _userFromFirebase(credentialAuth.user);
+    } catch (e) {
     }
   }
 

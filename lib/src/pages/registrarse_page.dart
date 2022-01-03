@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:precavidos_simulador/src/pages/registrarse_page.dart';
 import 'package:precavidos_simulador/src/services/auth_service.dart';
 import 'package:precavidos_simulador/src/widgets/custom_input.dart';
 import 'package:precavidos_simulador/src/widgets/labels.dart';
@@ -8,8 +7,8 @@ import 'package:precavidos_simulador/src/widgets/main_button.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegistrarsePage extends StatelessWidget {
+  const RegistrarsePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Logo(titulo: "Precavidos"),
+                Logo(titulo: "Registrarse"),
                 
                 SizedBox(height: 30),
 
@@ -35,6 +34,8 @@ class LoginPage extends StatelessWidget {
                     onTap: () async {
                       try {
                         await authService.googleLogin();  
+                        Navigator.pop(context);
+                        
                       } catch (e) {
                       }
                     },
@@ -56,7 +57,7 @@ class LoginPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image(image: AssetImage('assets/images/google_icon.png'), width: 40,),
+                          Image(image: AssetImage('assets/images/google_icon.png'), width: 45,),
                           SizedBox(width: 10),
                           Text("Ingresar con Google", style: TextStyle(fontSize: 17))
                         ],
@@ -73,6 +74,7 @@ class LoginPage extends StatelessWidget {
                     onTap: () async {
                       try {
                         await authService.facebookLogin();
+                        Navigator.pop(context);
                       } catch (e) {
                       }
                     },
@@ -107,22 +109,18 @@ class LoginPage extends StatelessWidget {
           
                 SizedBox(height: 30),
 
-                Text("o puedes ingresar con"),
+                Text("o puedes registrarte con:"),
 
                 SizedBox(height: 30),
           
                 _Form(),
                 SizedBox(height: 30),
                 InkWell(
-                  onTap: (){
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(
-                        builder: (context) => RegistrarsePage()
-                      )
-                    );
+                  onTap: () {
+                    Navigator.pop(context);
                   },
-                  child: Labels(mensaje1: "¿No tienes cuenta?", mensaje2: "Crea una ahora")),
+                  child: Labels(mensaje1: "¿Ya tienes cuenta?", mensaje2: "Ingresa ahora")
+                ),
                 SizedBox(height: 30),
                 InkWell(
                   onTap: () async{
@@ -152,6 +150,8 @@ class __FormState extends State<_Form> {
   
   final emailCtlr = TextEditingController();
   final passCtlr = TextEditingController();
+  final passCtlrAgain = TextEditingController();
+
   
   @override
   Widget build(BuildContext context) {
@@ -170,14 +170,19 @@ class __FormState extends State<_Form> {
           ),
           CustomInput(
             icon: Icons.lock_outline,
-            placeholder: "Contraseña",
-            
+            placeholder: "Contraseña",    
             textController:passCtlr,
+            isPassword: true,
+          ),
+          CustomInput(
+            icon: Icons.lock_outline,
+            placeholder: "Repita la Contraseña",    
+            textController:passCtlrAgain,
             isPassword: true,
           ),
           
           SizedBox(height: 30),
-
+          
           (error) ?
             Column(
               children: [
@@ -186,23 +191,36 @@ class __FormState extends State<_Form> {
               ],
             ):
             SizedBox.shrink(),
-          
+
+
           MainButton(
-            text: "Ingresar",
+            text: "Registrarse",
             onPressed: () async{ 
-              //authService.signInWithEmailAndPassword(emailCtlr.text.trim(), passCtlr.text.trim());
-
               try {
+                if(passCtlr.text.trim() == passCtlrAgain.text.trim()){
+                  if(passCtlr.text.trim().length <= 7 ){
+                    setState(() {
+                      error = true;
+                      msg = "Ha ocurrido un error, la longitud de la contraseña debe ser mayor a 8 caracteres";
+                    });
+                  }else{
+                    String resp = await authService.createUserWithEmailAndPassword(emailCtlr.text.trim(), passCtlr.text.trim());
+                    if(resp == "Ok") {
+                      Navigator.pop(context);
+                      return;
+                    }
+                    setState(() {
+                      error = true;
+                      msg = resp;
+                    });
+                  }
 
-                String resp = await authService.signInWithEmailAndPassword(emailCtlr.text.trim(), passCtlr.text.trim());
-                print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                print(resp);
-                if(resp == "Ok") return;
-                setState(() {
-                  error = true;
-                  msg = resp;
-                });
-
+                }else{
+                  setState(() {
+                    error = true;
+                    msg = "Ha ocurrido un error, revise que las contraseñas sean iguales e inténtelo más tarde";
+                  });
+                }
               } catch (e) {
                 setState(() {
                   error = true;

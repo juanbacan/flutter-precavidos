@@ -48,8 +48,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         //versionCode flutterVersionCode.toInteger()
-        versionCode 10
-        versionName "2.2.1"
+        versionCode 11
+        versionName "2.3.1"
     }
 
     signingConfigs {
@@ -73,7 +73,16 @@ flutter {
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.0')
+    //implementation platform('com.google.firebase:firebase-bom:29.0.2')
+
+    // Facebook
+    // implementation 'com.google.firebase:firebase-auth'
+
+    //
     implementation 'com.google.firebase:firebase-analytics'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
+
+    // Facebook
+    //implementation 'com.facebook.android:facebook-login:[8.1)'
 }

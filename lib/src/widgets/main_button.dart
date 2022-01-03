@@ -22,7 +22,7 @@ class MainButton extends StatelessWidget {
       onPressed: this.onPressed,
       child: Container(
         width: double.infinity,
-        height: 55,
+        height: 46,
         child: Center(
           child: Text(this.text, style: TextStyle(color: Colors.white, fontSize: 17)),
         ),
