@@ -41,7 +41,8 @@
 
         <meta-data
           android:name="com.google.android.gms.ads.APPLICATION_ID"
-          android:value="ca-app-pub-8752034118555127~8264178497"
+          android:value="ca-app-pub-4779141162178342~7080707961"
+
           />
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/> 

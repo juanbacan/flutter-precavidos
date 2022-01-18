@@ -148,6 +148,7 @@ class __FormState extends State<_Form> {
   bool error = false;
   String msg = "";
   
+  final nombreCtlr = TextEditingController();
   final emailCtlr = TextEditingController();
   final passCtlr = TextEditingController();
   final passCtlrAgain = TextEditingController();
@@ -162,6 +163,12 @@ class __FormState extends State<_Form> {
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
+          CustomInput(
+            icon: Icons.mail_outline,
+            placeholder: "Nombre Completo",
+            keyboardType: TextInputType.text,
+            textController: nombreCtlr,
+          ),
           CustomInput(
             icon: Icons.mail_outline,
             placeholder: "Correo",
@@ -204,15 +211,26 @@ class __FormState extends State<_Form> {
                       msg = "Ha ocurrido un error, la longitud de la contraseña debe ser mayor a 8 caracteres";
                     });
                   }else{
-                    String resp = await authService.createUserWithEmailAndPassword(emailCtlr.text.trim(), passCtlr.text.trim());
-                    if(resp == "Ok") {
-                      Navigator.pop(context);
-                      return;
+                    if(nombreCtlr.text.trim().length <= 2){
+                      setState(() {
+                        error = true;
+                        msg = "Debe especificar su nombre completo";
+                      });
+                    }else{
+                      String resp = await authService.createUserWithEmailAndPassword(
+                        nombreCtlr.text.trim(), 
+                        emailCtlr.text.trim(), 
+                        passCtlr.text.trim()
+                      );
+                      if(resp == "Ok") {
+                        Navigator.pop(context);
+                        return;
+                      }
+                      setState(() {
+                        error = true;
+                        msg = resp;
+                      });
                     }
-                    setState(() {
-                      error = true;
-                      msg = resp;
-                    });
                   }
 
                 }else{

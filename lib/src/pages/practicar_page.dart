@@ -75,6 +75,12 @@ class __PracticarState extends State<_Practicar> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
+  }
+
   void _createInterstitialAd() {
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,

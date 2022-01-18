@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:precavidos_simulador/ad_helper.dart';
 import 'package:precavidos_simulador/src/ads/banner_ad.dart';
 import 'package:precavidos_simulador/src/models/comentario_model.dart';
 import 'package:precavidos_simulador/src/models/pregunta.dart';
@@ -44,6 +48,72 @@ class _Resultado extends StatefulWidget {
 }
 
 class __ResultadoState extends State<_Resultado> {
+
+  // Publicidad *******************************
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 2;
+  int maxFailedLoadAttempts = 3;
+  // ******************************************
+
+  @override
+  void initState() {
+    _createInterstitialAd();    // Publicidad
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          print('$ad loaded');
+          _interstitialAd = ad;
+          _numInterstitialLoadAttempts = 0;
+          _interstitialAd!.setImmersiveMode(true);
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error.');
+          _numInterstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+        
+      )
+    );
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+        print('ad onAdShowedFullScreenContent.'),
+
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialAd = null;
+  }
 
   int numPreguntaActual = 0;
 
@@ -156,6 +226,18 @@ class __ResultadoState extends State<_Resultado> {
           children: [
             InkWell(
               onTap: (){
+
+                // Publicidad *********************************
+                Random randomNumber = Random();
+                int r = 1 + randomNumber.nextInt(6);
+
+                print(r);
+
+                if(r == 2){
+                  _showInterstitialAd();
+                }
+                // ********************************************
+
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
@@ -184,6 +266,7 @@ class __ResultadoState extends State<_Resultado> {
       ],
     );
   }
+
 }
 
 class _Opcion extends StatelessWidget {

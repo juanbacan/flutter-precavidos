@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 InfoUserResponse infoUserResponseFromJson(String str) => InfoUserResponse.fromJson(json.decode(str));
 
 String infoUserResponseToJson(InfoUserResponse data) => json.encode(data.toJson());

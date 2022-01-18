@@ -16,7 +16,7 @@ class _BannerAdState extends State<BannerAdGoogle> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     _ad = BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       size: AdSize.banner,

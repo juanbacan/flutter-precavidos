@@ -6,23 +6,23 @@ class Comentario {
   String? photoUrl;
   int date;
   List<String> likes;
-  String displayName;
+  String? displayName;
 
   Comentario({
     required this.id,
     required this.comentario,
     required this.uid,
     this.photoUrl,
+    this.displayName,
     required this.date,
-    required this.likes,
-    required this.displayName,
+    required this.likes
   });
 
   factory Comentario.fromJson(Map<String, dynamic> json) => Comentario(
     id: json["id"],
       comentario: json["comentario"],
       uid: json["uid"],
-      photoUrl: json["photoURL"] == null ? null : json["photoURL"],
+      photoUrl: json["photoURL"],
       date: json["date"],
       likes: List<String>.from(json["likes"].map((x) => x)),
       displayName: json["displayName"],
@@ -32,7 +32,7 @@ class Comentario {
       "id": id,
       "comentario": comentario,
       "uid": uid,
-      "photoURL": photoUrl == null ? null : photoUrl,
+      "photoURL": photoUrl,
       "date": date,
       "likes": List<dynamic>.from(likes.map((x) => x)),
       "displayName": displayName,

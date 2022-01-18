@@ -92,10 +92,8 @@ class _Tarjeta extends StatelessWidget {
   final Color color;
   final String image;
   final String text;
-  final VoidCallback? showAd;
-
+  
   const _Tarjeta({
-    this.showAd,
     required this.ruta,
     required this.color,
     required this.image,
@@ -120,10 +118,7 @@ class _Tarjeta extends StatelessWidget {
             Navigator.push(
               context, MaterialPageRoute(builder: this.ruta)
             );
-          },
-
-          //onTap: this.showAd ?? (){},
-            
+          },            
 
           child: Row(
             children: [
@@ -148,11 +143,9 @@ class _Tarjeta extends StatelessWidget {
 class _TitleHome extends StatelessWidget {
 
   final String text;
-  final VoidCallback? showAd;
 
   const _TitleHome({
     required this.text,
-    this.showAd,
   });
 
   @override

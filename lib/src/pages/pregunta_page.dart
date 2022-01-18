@@ -320,10 +320,17 @@ class _UsuarioComentario extends StatelessWidget {
                 )
                 : CircleAvatar(
                   radius: 18,
-                  child: Text("${comentario.displayName[0]}", style: TextStyle(fontSize: 25),),
+                  child: Text(
+                    comentario.displayName == null || comentario.displayName == "" ? "M" : comentario.displayName![0], 
+                    style: TextStyle(fontSize: 25)
+                  ),
                 ),
               SizedBox(width: 10),
-              Text(comentario.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                comentario.displayName == null || comentario.displayName == "" ? "Mari" : comentario.displayName!, 
+                overflow: TextOverflow.ellipsis, 
+                style: TextStyle(fontWeight: FontWeight.bold)
+              ),
             ],
           ),
           SizedBox(height: 6),
