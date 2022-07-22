@@ -38,6 +38,7 @@ class PracticarService with ChangeNotifier {
 
     try {
       final resp = await http.get(Uri.parse("${ Environment.apiURL }/simulador/aleatorio/$materia?num=20"),
+      //final resp = await http.get(Uri.parse("${ Environment.apiURL }/simulador/aleatorio/atencion-y-concentracion?num=20"),
       //final resp = await http.get(Uri.parse("${ Environment.apiURL }/preguntas/todo/logico"),
       //final resp = await http.get(Uri.parse("${ Environment.apiURL }/preguntas/abstracto?desde=0"),
         headers: {

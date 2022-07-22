@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:precavidos_simulador/src/global/environment.dart';
 import 'package:precavidos_simulador/src/models/infousuario_response.dart';
+import 'package:precavidos_simulador/src/models/token_model.dart';
 import 'package:precavidos_simulador/src/models/usuario.dart';
 
 class AuthService with ChangeNotifier {
@@ -16,17 +17,44 @@ class AuthService with ChangeNotifier {
   Usuario? get usuario => this._usuario;
   // *************************************************
 
-  Usuario? _userFromFirebase(auth.User? usuario){
+  // Almacena la información adicinal del usuario
+  bool _admin = false;
+  bool get admin => this._admin;
+
+  void usuariosInfoAdicional () async{
+
+    try {
+      final usuario2 = _firebaseAuth.currentUser;
+      final idToken = await usuario2!.getIdToken(true);
+
+      final resp = await http.get(Uri.parse("${ Environment.apiURL }/token"),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-token': idToken
+        }
+      );
+      final tokenResponse = tokenResponseFromJson( resp.body );
+      this._admin = tokenResponse.admin ?? false;
+      //print(tokenResponse.admin);
+    } catch (e) {
+      this._admin = false;
+    }
+  }
+
+  Usuario? _userFromFirebase(auth.User? usuario) {
     if(usuario == null){
       this._usuario = null;
       return null;
     }
+    
+    // Información Adicional de Usuario desde el Administrador
+    usuariosInfoAdicional();
+  
     this._usuario = Usuario(id: usuario.uid, displayName: usuario.displayName, email: usuario.email, photoUrl: usuario.photoURL);
     return Usuario(id: usuario.uid, displayName: usuario.displayName, email: usuario.email, photoUrl: usuario.photoURL);
   } 
 
   Stream<Usuario?>? get user {
-    
     return _firebaseAuth.authStateChanges().map( _userFromFirebase );
   }
 

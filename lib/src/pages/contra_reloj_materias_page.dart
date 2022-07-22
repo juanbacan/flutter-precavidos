@@ -6,10 +6,11 @@ import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:precavidos_simulador/src/widgets/appBarPrecavidos.dart';
 
 final List<Materia> tarjetas = [
-  Materia("Razonamiento Lógico", 10, "logico.png", "logico"),
-  Materia("Razonamiento Numérico", 10, "numerico.png", "numerico"),
-  Materia("Razonamiento Verbal", 10, "verbal.png", "verbal"),
-  Materia("Razonamiento Abstracto", 10, "abstracto.png", "abstracto"),
+  Materia("Razonamiento Lógico", 15, "logico.png", "logico"),
+  Materia("Razonamiento Numérico", 15, "numerico.png", "numerico"),
+  Materia("Razonamiento Verbal", 15, "verbal.png", "verbal"),
+  Materia("Atención y Concentración", 15, "atencion-y-concentracion.png", "atencion-y-concentracion"),
+  Materia("Razonamiento Abstracto", 15, "abstracto.png", "abstracto"),
 ];
 
 class ContraRelojMateriasPage extends StatelessWidget {

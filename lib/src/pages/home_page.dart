@@ -5,6 +5,7 @@ import 'package:precavidos_simulador/src/pages/calcular_nota_page.dart';
 import 'package:precavidos_simulador/src/pages/contra_reloj_materias_page.dart';
 import 'package:precavidos_simulador/src/pages/curso_avanzado_page.dart';
 import 'package:precavidos_simulador/src/pages/curso_basico_page.dart';
+import 'package:precavidos_simulador/src/pages/nosotros_page.dart';
 import 'package:precavidos_simulador/src/pages/practicar_page.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 
@@ -24,60 +25,72 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       Materia("Razonamiento Lógico", 20, "logico.png", "logico"),
       Materia("Razonamiento Numérico", 20, "numerico.png", "numerico"),
       Materia("Razonamiento Verbal", 20, "verbal.png", "verbal"),
+      Materia("Atención y Concentración", 20, "atencion-y-concentracion.png", "atencion-y-concentracion"),
       Materia("Razonamiento Abstracto", 20, "abstracto.png", "abstracto"),
     ];
 
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-              _TitleHome(text: "Simulador Examen Transformar Precavidos"),
-
-              BannerAdGoogle(),
-
-              _TitleHome(text: "Categorias"),
-        
-              _MateriasCard(materias: materias),      // Tarjetas de las Materias
-              
-              _TitleHome(text: "Simuladores"),
-      
-              Row(
-                children: [
-                  _CursosCard(image: "curso_basico.jpeg", url: "basico"),
-                  _CursosCard(image: "curso_avanzado.jpeg", url: "avanzado"),
-                ],
-              ),
-      
-              _TitleHome(text: "Contra Reloj"),
-      
-              _Tarjeta(
-                ruta: (context) => ContraRelojMateriasPage(),
-                color: MyColors.contraRelojLight,
-                image: "assets/images/contra_reloj.png",
-                text: "Responde las preguntas correctamente lo más rápido que puedas",
-              ),
-        
-              _TitleHome(text: "Calcular Nota"),
-
-              _Tarjeta(
-                ruta: (context) => CalcularNotaPage(),
-                color: MyColors.calcularNotaLight,
-                image: "assets/images/calcular_nota.png",
-                text: "Calcula tu nota de postulación",
-              ),
-
-              SizedBox(height: 50),
-
-              BannerAdGoogle()
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    
+                    _TitleHome(text: "Simulador Examen Transformar Precavidos"),
           
-            ],
+                    _TitleHome(text: "Categorias"),
+              
+                    _MateriasCard(materias: materias),      // Tarjetas de las Materias
+                    
+                    _TitleHome(text: "Simuladores"),
+            
+                    Row(
+                      children: [
+                        _CursosCard(image: "curso_basico.jpeg", url: "basico"),
+                        _CursosCard(image: "curso_avanzado.jpeg", url: "avanzado"),
+                      ],
+                    ),
+            
+                    _TitleHome(text: "Contra Reloj"),
+            
+                    _Tarjeta(
+                      ruta: (context) => ContraRelojMateriasPage(),
+                      color: MyColors.contraRelojLight,
+                      image: "assets/images/contra_reloj.png",
+                      text: "Responde las preguntas correctamente lo más rápido que puedas",
+                    ),
+              
+                    _TitleHome(text: "Calcular Nota"),
+          
+                    _Tarjeta(
+                      ruta: (context) => CalcularNotaPage(),
+                      color: MyColors.calcularNotaLight,
+                      image: "assets/images/calcular_nota.png",
+                      text: "Calcula tu nota de postulación",
+                    ),
+          
+                    _TitleHome(text: "Acerca de Precavidos"),
+          
+                    _Tarjeta(
+                      ruta: (context) => NosotrosPage(),
+                      color: Theme.of(context).secondaryHeaderColor,
+                      image: "assets/icon/Logo.png",
+                      text: "Síguenos en nuestras Redes Sociales y califaca la aplicación",
+                    ),
+          
+                    SizedBox(height: 50),          
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+          BannerAdGoogle()
+        ],
       ),
     );
   }
@@ -131,7 +144,7 @@ class _Tarjeta extends StatelessWidget {
                     Text(text)
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -257,7 +270,7 @@ class _MateriasCard extends StatelessWidget {
                         Text("${materia.name}",
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
-                        Text("Resuelve problemas utilizando tus conocimientos",
+                        Text("Resuelve problemas aleatorios en cada intento.",
                           style: Theme.of(context).textTheme.caption,
                         ),
                         Text("${materia.numPreguntas.toString()} Preguntas",

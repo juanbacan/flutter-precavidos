@@ -14,7 +14,6 @@ import 'package:precavidos_simulador/src/services/preguntas_service.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:precavidos_simulador/src/utils/my_snackbar.dart';
 
-
 class ResponderPage extends StatelessWidget {
 
   final String preguntaId;

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:precavidos_simulador/src/pages/pregunta_page.dart';
+import 'package:precavidos_simulador/src/widgets/html_table.dart';
 import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -16,7 +17,8 @@ final Map<String, String> materias = {
   "logico": "Razonamiento Lógico",
   "numerico": "Razonamiento Numérico",
   "verbal": "Razonamiento Verbal",
-  "abstracto": "Razonamiento Abstracto"
+  "abstracto": "Razonamiento Abstracto",
+  "atencion-y-concentracion": "Atención y Concentración",
 };
 
 class PracticarPage extends StatelessWidget {
@@ -157,7 +159,9 @@ class __PracticarState extends State<_Practicar> {
               margin: EdgeInsets.only( bottom: 50 ),
               child: Column(
                 children: [
-                  Html(data: pregunta!.enunciado),
+                  HtmlTable(
+                    data: pregunta!.enunciado, 
+                  ),
                   SizedBox(height: 20),
                   _opciones(pregunta),
                 ],
@@ -293,7 +297,7 @@ class __PracticarState extends State<_Practicar> {
 
                 // Publicidad *********************************
                 Random randomNumber = Random();
-                int r = 1 + randomNumber.nextInt(6);
+                int r = 1 + randomNumber.nextInt(8);
 
                 print(r);
 
@@ -335,7 +339,7 @@ class __PracticarState extends State<_Practicar> {
               onTap: (){
                 // Publicidad *********************************
                 Random randomNumber = Random();
-                int r = 1 + randomNumber.nextInt(6);
+                int r = 1 + randomNumber.nextInt(8);
 
                 print(r);
 

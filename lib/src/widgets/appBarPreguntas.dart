@@ -106,7 +106,7 @@ class AppBarPreguntas extends StatelessWidget {
           ),
           IconButton(
             onPressed: (){}, 
-            icon: Icon(Icons.favorite_border, color: Theme.of(context).primaryColor)     //TODO
+            icon: Icon(Icons.favorite_border, color: Theme.of(context).primaryColor)
           ),     
         ],
       ),

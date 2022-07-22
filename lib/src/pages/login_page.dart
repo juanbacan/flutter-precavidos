@@ -126,7 +126,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 30),
                 InkWell(
                   onTap: () async{
-                    if (!await launch("https://precavidos.com/terminos-condiciones")) throw 'Could not launch';
+                    if (!await launch("https://precavidos.com/terminos-condiciones")) throw 'No se ha podido lanzar';
                   },
                   child: Text("Terminos y condiciones de uso", style: TextStyle(fontWeight: FontWeight.w200))
                 ),

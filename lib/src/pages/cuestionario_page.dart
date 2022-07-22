@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:precavidos_simulador/src/widgets/html_table.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:precavidos_simulador/src/widgets/appBarPreguntas.dart';
 import 'package:precavidos_simulador/src/widgets/opcion_cuestionario.dart';
@@ -194,7 +194,7 @@ class _PreguntaDetalle extends StatelessWidget {
           margin: EdgeInsets.only( bottom: 50 ),
           child: Column(
             children: [
-              Html(data: pregunta.enunciado),
+              HtmlTable(data: pregunta.enunciado),
               SizedBox(height: 20),
               OpcionCuestionario(
                 enunciado: pregunta.respuestas.respuesta1, 

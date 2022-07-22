@@ -95,10 +95,6 @@ class Simulacion {
 }
 
 
-
-  //const name({Key? key}) : super(key: key);
-
-
 class InfoSimulacion {
   String id;
   String? userRespuesta;

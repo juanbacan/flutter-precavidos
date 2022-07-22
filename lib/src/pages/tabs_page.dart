@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:precavidos_simulador/src/models/usuario.dart';
-//import 'package:precavidos_simulador/src/pages/contestar_page.dart';
 import 'package:precavidos_simulador/src/pages/login_page.dart';
 import 'package:precavidos_simulador/src/pages/usuario_page.dart';
 import 'package:precavidos_simulador/src/services/auth_service.dart';

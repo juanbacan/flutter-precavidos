@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:precavidos_simulador/src/widgets/appBarPreguntas.dart';
+import 'package:precavidos_simulador/src/widgets/html_table.dart';
 import 'package:provider/provider.dart';
 import 'package:precavidos_simulador/src/models/materias_model.dart';
 import 'package:precavidos_simulador/src/models/pregunta.dart';
@@ -106,7 +106,9 @@ class __PreguntaDetalleState extends State<_PreguntaDetalle> {
         margin: EdgeInsets.only( bottom: 50 ),
         child: Column(
           children: [
-            Html(data: widget.pregunta.enunciado),
+            HtmlTable(
+              data: widget.pregunta.enunciado,    
+            ),
             SizedBox(height: 20),
             OpcionSimulador(opcion: widget.pregunta.respuestas.respuesta1, respuestaCorrecta: widget.pregunta.respuestaCorrecta, numOpcion: "respuesta1"),
             OpcionSimulador(opcion: widget.pregunta.respuestas.respuesta2, respuestaCorrecta: widget.pregunta.respuestaCorrecta, numOpcion: "respuesta2"),

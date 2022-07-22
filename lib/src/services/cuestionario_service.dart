@@ -45,7 +45,7 @@ class CuestionarioService with ChangeNotifier {
     }
     print(preguntas);
 
-    final resp = await http.put(
+    await http.put(
       Uri.parse("${ Environment.apiURL }/infousuario"),
       headers: {
         'Content-Type': 'application/json',

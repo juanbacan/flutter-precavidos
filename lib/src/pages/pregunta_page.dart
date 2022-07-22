@@ -3,16 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
+import 'package:precavidos_simulador/src/widgets/html_table.dart';
+import 'package:provider/provider.dart';
 import 'package:precavidos_simulador/src/global/environment.dart';
 import 'package:precavidos_simulador/src/models/comentario_model.dart';
 import 'package:precavidos_simulador/src/models/usuario.dart';
-import 'package:precavidos_simulador/src/pages/responder_page.dart';
 import 'package:precavidos_simulador/src/services/auth_service.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:precavidos_simulador/src/pages/responder_page.dart';
 import 'package:precavidos_simulador/src/models/pregunta.dart';
 import 'package:precavidos_simulador/src/services/preguntas_service.dart';
-import 'package:provider/provider.dart';
 
 final Map<String, String> materias = {
   "logico": "Razonamiento Lógico",
@@ -124,6 +125,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
 
     final _authService = Provider.of<AuthService>(context);
     final Usuario? usuario = _authService.usuario;
+    final bool _usuarioAdmin = _authService.admin;
     
     final _preguntasService = Provider.of<PreguntasService>(context, listen: true);
 
@@ -142,7 +144,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Html(data: pregunta!.enunciado),
+                      child: HtmlTable(data: pregunta!.enunciado),
                     ),
 
                     _RespuestaCorrecta(pregunta: pregunta),
@@ -166,7 +168,14 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                           return Column(
                             children: [
 
-                              _HeaderComentario(numLikes: comentario.likes.length, usuario: usuario, comentario: comentario, pregunta: pregunta, preguntasService: _preguntasService),
+                              _HeaderComentario(
+                                numLikes: comentario.likes.length, 
+                                usuario: usuario, 
+                                comentario: comentario, 
+                                pregunta: pregunta, 
+                                preguntasService: _preguntasService,
+                                usuarioAdmin: _usuarioAdmin,
+                              ),
                               
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -206,7 +215,7 @@ class _PreguntaInfoState extends State<PreguntaInfo> {
                                       try {
 
                                         final String idToken = await _authService.getTokenUser();
-                                        final resp = await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
+                                        await http.put(Uri.parse("${ Environment.apiURL }/pregunta/likes/${comentario.id}"),
                                           body: json.encode(
                                             {
                                               "idComentario": comentario.id,
@@ -348,6 +357,7 @@ class _HeaderComentario extends StatelessWidget {
     required this.usuario,
     required this.comentario,
     required this.pregunta,
+    required this.usuarioAdmin,
     required PreguntasService preguntasService,
   }) : _preguntasService = preguntasService, super(key: key);
 
@@ -356,6 +366,7 @@ class _HeaderComentario extends StatelessWidget {
   final Comentario comentario;
   final Pregunta? pregunta;
   final PreguntasService _preguntasService;
+  final bool usuarioAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -373,8 +384,11 @@ class _HeaderComentario extends StatelessWidget {
                 Icon(Icons.favorite, size: 19, color: Color.fromRGBO(255, 121, 104, 1)),        
               SizedBox(width: 3),
               Text("$numLikes", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+
+              // Botón para editar los comentarios
               
-              (usuario != null && usuario?.id == comentario.uid)
+              (usuario != null && usuario?.id == comentario.uid || usuarioAdmin)
                 ? PopupMenuButton(
                   onSelected: (result){
                     
@@ -392,7 +406,10 @@ class _HeaderComentario extends StatelessWidget {
                     );
                   },
                   itemBuilder: (BuildContext context) => [
-                    const PopupMenuItem(child: Text("Editar Solución"), value: "Editar",)
+                    const PopupMenuItem(
+                      child: Text("Editar Solución"), 
+                      value: "Editar",
+                    )
                   ],
                 )
                 : SizedBox.shrink()

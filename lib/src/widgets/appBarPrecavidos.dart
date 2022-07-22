@@ -27,7 +27,6 @@ class _AppBarPrecavidosState extends State<AppBarPrecavidos> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     
     _createInterstitialAd();
@@ -82,6 +81,11 @@ class _AppBarPrecavidosState extends State<AppBarPrecavidos> {
     _interstitialAd = null;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

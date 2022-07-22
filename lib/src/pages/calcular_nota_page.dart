@@ -28,7 +28,6 @@ class _CalcularNotaPageState extends State<CalcularNotaPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     
     _createInterstitialAd();
@@ -80,6 +79,12 @@ class _CalcularNotaPageState extends State<CalcularNotaPage> {
     );
     _interstitialAd!.show();
     _interstitialAd = null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
   }
 
 

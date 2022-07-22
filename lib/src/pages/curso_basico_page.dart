@@ -16,6 +16,7 @@ class CursoBasicoPage extends StatelessWidget {
       Materia("Razonamiento Numérico", 20, "simulador/facil.png", "numerico"),
       Materia("Razonamiento Lógico", 20, "simulador/facil.png", "logico"),
       Materia("Razonamiento Verbal", 20, "simulador/facil.png", "verbal"),
+      Materia("Atención y Concentración", 20, "simulador/facil.png", "atencion-y-concentracion"),
       Materia("Razonamiento Abstracto", 20, "simulador/facil.png", "abstracto"),
     ];
 

@@ -21,6 +21,11 @@ class MyColors {
   static Color calcularNotaLight = Color.fromRGBO(253, 235, 208, 1);
   static Color calcularNota = Color.fromRGBO(250, 128, 114, 1);
 
+  static Color nosotrosLight = Color.fromRGBO(253, 235, 208, 1);
+  static Color nosotros = Color.fromRGBO(250, 128, 114, 1);
+
+  
+
   //static Color 
 }
 

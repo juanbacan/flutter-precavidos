@@ -31,7 +31,7 @@ class _OpcionState extends State<OpcionSimulador> {
     final simuladorService = Provider.of<ContraRelojService>(context, listen: false);
 
     void mainFunction(){
-      if(simuladorService.preguntaContestada == true) return;   // Si la preugnta ya fue contestada
+      if(simuladorService.preguntaContestada == true) return;   // Si la pregunta ya fue contestada
 
       simuladorService.preguntaContestada = true;     // Se está contestando ahora
       contestada = true;

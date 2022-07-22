@@ -20,6 +20,7 @@ class _UsuarioPageState extends State<UsuarioPage> with AutomaticKeepAliveClient
   Widget build(BuildContext context) {
 
     final _authService = Provider.of<AuthService>(context);
+    final _userAdmin = _authService.admin;
     final Usuario? usuario = _authService.usuario;
 
     print(usuario?.toJson().values);
@@ -55,8 +56,12 @@ class _UsuarioPageState extends State<UsuarioPage> with AutomaticKeepAliveClient
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(usuario?.displayName ?? "No name", overflow: TextOverflow.ellipsis,),
-                                      Text("Estudiante", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold))
+                                      Text(usuario?.displayName ?? "No name", overflow: TextOverflow.ellipsis),
+
+                                      Text(
+                                        _userAdmin ? "Administrador" : "Estudiante",    
+                                        style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)
+                                      )
                                     ],
                                   ),
                               ],     

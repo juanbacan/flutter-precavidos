@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: ( _ ) => new AuthService(),
       child: MaterialApp(
-        title: 'Material App',
+        title: 'Transformar | Precavidos',
         theme: miTema,
         debugShowCheckedModeBanner: false,
         home: TabsPage(),

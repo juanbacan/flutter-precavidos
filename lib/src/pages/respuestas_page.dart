@@ -8,9 +8,9 @@ import 'package:precavidos_simulador/src/ads/banner_ad.dart';
 import 'package:precavidos_simulador/src/models/comentario_model.dart';
 import 'package:precavidos_simulador/src/models/pregunta.dart';
 import 'package:precavidos_simulador/src/pages/pregunta_page.dart';
-//import 'package:precavidos_simulador/src/pages/responder_page.dart';
 import 'package:precavidos_simulador/src/utils/my_colors.dart';
 import 'package:precavidos_simulador/src/widgets/appBarPrecavidos.dart';
+import 'package:precavidos_simulador/src/widgets/html_table.dart';
 
 
 class RespuestasPage extends StatelessWidget {
@@ -182,7 +182,7 @@ class __ResultadoState extends State<_Resultado> {
               margin: EdgeInsets.only( bottom: 50, top: 20 ),
               child: Column(
                 children: [
-                  Html(data: preguntaActual.enunciado),
+                  HtmlTable(data: preguntaActual.enunciado),
                   _Opcion(
                     enunciado: respuestas.respuesta1, 
                     numRespuesta: "respuesta1",

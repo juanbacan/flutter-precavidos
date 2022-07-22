@@ -11,57 +11,68 @@ class BannerAdGoogle extends StatefulWidget {
 
 class _BannerAdState extends State<BannerAdGoogle> {
 
-  late BannerAd _ad;
-  bool _isAdLoaded = false;
+  BannerAd? _anchoredAdaptiveAd;
+  bool _isLoaded = false;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAd();
+  }
 
-    _ad = BannerAd(
+  Future<void> _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    _anchoredAdaptiveAd = BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
-      size: AdSize.banner,
+      size: size,
       request: AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) {
+        onAdLoaded: (Ad ad) {
+          print('$ad loaded: ${ad.responseInfo}');
           setState(() {
-            _isAdLoaded = true;
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _anchoredAdaptiveAd = ad as BannerAd;
+            _isLoaded = true;
           });
         },
-        onAdFailedToLoad: (ad, error) {
-          // Releases an ad resource when it fails to load
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Anchored adaptive banner failedToLoad: $error');
           ad.dispose();
-
-          print('Ad load failed (code=${error.code} message=${error.message})');
         },
       ),
     );
+    return _anchoredAdaptiveAd!.load();
+    
+  }
 
-    _ad.load();
+  @override
+  Widget build(BuildContext context){
+    return Column(
+      children: [
+        if (_anchoredAdaptiveAd != null && _isLoaded)
+          Container(
+            color: Colors.green,
+            width: _anchoredAdaptiveAd!.size.width.toDouble(),
+            height: _anchoredAdaptiveAd!.size.height.toDouble(),
+            child: AdWidget(ad: _anchoredAdaptiveAd!),
+          )
+      ],
+    );
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-
-    _ad.dispose();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return (_isAdLoaded)
-      ? Align(
-        alignment: Alignment.center,
-        child: Container(
-            width: _ad.size.width.toDouble(),
-            height: 72.0,
-            alignment: Alignment.center,
-            child: AdWidget(
-              ad: _ad,
-            ),
-        ),
-      )
-      : SizedBox.shrink();
+    _anchoredAdaptiveAd?.dispose();
   }
 }

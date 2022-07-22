@@ -18,7 +18,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.1.0'
+    flutterVersionName = '2.2.0'
 }
 
 apply plugin: 'com.android.application'
@@ -35,7 +35,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -46,10 +46,10 @@ android {
         // applicationId "com.example.precavidos_simulador"
         applicationId "com.preonline"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         //versionCode flutterVersionCode.toInteger()
-        versionCode 14
-        versionName "2.3.4"
+        versionCode 16
+        versionName "2.4.0"
     }
 
     signingConfigs {
